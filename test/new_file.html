@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="../js/jquery-1.9.0.js"></script>
+		<script type="text/javascript" src="../js/three.js"></script>
+		<script type="text/javascript" src="../js/OrbitControls.js"></script>
+		<script type="text/javascript" src="../js/Stats.js"></script>
+    	<script type="text/javascript" src="../js/dat.gui.js"></script>
+		<title></title>
+		<style type="text/css">
+			body{
+				margin: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="WebGL-output">
+			
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+			
+			var scene = new THREE.Scene();
+			
+			var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight,0.1,1000);
+			
+			var renderer = new THREE.WebGLRenderer();
+			
+			//renderer.setClearColor(0xeeeeee,1.0);
+			
+			//renderer.setSize(window.innerWidth,window.innerHeight);
+			
+			renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+	        renderer.setSize(window.innerWidth, window.innerHeight);
+	        renderer.shadowMapEnabled = true;
+				
+			var axes = new THREE.AxisHelper(20);
+			//scene.add(axes);
+			
+			var planeGeometry = new THREE.PlaneGeometry(60,20,1,1);
+			var planeMeterial = new THREE.MeshLambertMaterial({color:0xffffff});
+			
+			var plane = new THREE.Mesh(planeGeometry, planeMeterial);
+			
+			plane.rotation.x = -0.5*Math.PI;
+			plane.position.x = 15;
+			plane.position.y = 0;
+			plane.position.z = 0;
+			plane.receiveShadow = true;
+			
+			
+			
+			
+			
+			
+			
+			//scene.add(plane);
+			
+			var cubeGeometry = new THREE.CubeGeometry(5,50,50);
+			
+			var cubeMeterial = new THREE.MeshPhongMaterial();
+			//凹凸贴图
+			cubeMeterial.map = THREE.ImageUtils.loadTexture("../img/a.png");
+			cubeMeterial.bumpMap = THREE.ImageUtils.loadTexture('../img/a.png');
+			cubeMeterial.bumpScale = 0.9;
+			
+			var cube = new THREE.Mesh(cubeGeometry, cubeMeterial);
+			
+			cube.position.x = 00;
+			cube.position.y = 00;
+			cube.position.z = 0;
+			
+			scene.add(cube);
+			
+			
+			
+			var cubeMeterial1 = new THREE.MeshPhongMaterial();
+			//凹凸贴图
+			cubeMeterial1.map = THREE.ImageUtils.loadTexture("../img/b.png");
+			cubeMeterial1.bumpMap = THREE.ImageUtils.loadTexture('../img/b.png');
+			cubeMeterial1.bumpScale = 0.9;
+			
+			var cube1 = new THREE.Mesh(cubeGeometry, cubeMeterial1);
+			
+			cube1.position.x = 0;
+			cube1.position.y = 0;
+			cube1.position.z = 50;
+			
+			scene.add(cube1);
+			
+			var cubeMeterial2 = new THREE.MeshPhongMaterial();
+			//凹凸贴图
+			cubeMeterial2.map = THREE.ImageUtils.loadTexture("../img/c.png");
+			cubeMeterial2.bumpMap = THREE.ImageUtils.loadTexture('../img/c.png');
+			cubeMeterial2.bumpScale = 0.9;
+			
+			var cube2 = new THREE.Mesh(cubeGeometry, cubeMeterial2);
+			
+			cube2.position.x = 0;
+			cube2.position.y = -50;
+			cube2.position.z = 0;
+			
+			scene.add(cube2);
+			
+			var cubeMeterial3 = new THREE.MeshPhongMaterial();
+			//凹凸贴图
+			cubeMeterial3.map = THREE.ImageUtils.loadTexture("../img/d.png");
+			cubeMeterial3.bumpMap = THREE.ImageUtils.loadTexture('../img/d.png');
+			cubeMeterial3.bumpScale = 0.9;
+			
+			var cube3 = new THREE.Mesh(cubeGeometry, cubeMeterial3);
+			
+			cube3.position.x = 0;
+			cube3.position.y = -50;
+			cube3.position.z = 50;
+			
+			scene.add(cube3);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			var sphereGeomotry = new THREE.SphereGeometry(4,20,20);
+			var sphereMeterial = new THREE.MeshLambertMaterial({color:0x00cccc});
+			
+			var sphere = new THREE.Mesh(sphereGeomotry,sphereMeterial);
+			
+			sphere.position.x = 20;
+			sphere.position.y = 4;
+			sphere.position.z = 2;
+			sphere.castShadow = true;
+			
+			//scene.add(sphere);
+			
+			var spotLight = new THREE.SpotLight(0xffffff);
+			spotLight.position.set(-40,50,10)
+			scene.add(spotLight);
+			
+			var spotLight1 = new THREE.SpotLight(0xffff00);
+			spotLight1.position.set(-10,100,10)
+			scene.add(spotLight1);
+			
+			
+			
+			camera.position.x = -100;
+			camera.position.y = -100;
+			camera.position.z = -80;
+			camera.rotation.x = 0.3*Math.PI;
+			camera.lookAt(scene.position);
+			var orbitControls = new THREE.OrbitControls(camera);
+			orbitControls.autoRotate =true;
+			var clock = new THREE.Clock();
+			var delta = clock.getDelta();
+			orbitControls.update(delta);
+			
+			
+			function renderScene(){
+				
+				if(cubeMeterial.bumpScale>0){
+					cubeMeterial.bumpScale -= 0.001;
+					cubeMeterial1.bumpScale -= 0.001;
+					cubeMeterial2.bumpScale -= 0.001;
+					cubeMeterial3.bumpScale -= 0.001;
+				}else if(cubeMeterial.bumpScale<=0){
+					cube.rotation.y += 0.001*Math.PI;
+					cube.rotation.z += -0.001*Math.PI;
+					
+					cube1.rotation.x += 0.001*Math.PI;
+					cube1.rotation.z += -0.001*Math.PI;
+					
+					cube2.rotation.y += -0.001*Math.PI;
+					cube2.rotation.z += -0.001*Math.PI;
+					
+					cube3.rotation.x += -0.001*Math.PI;
+					cube3.rotation.z += -0.001*Math.PI;
+				}
+				/*
+				camera.rotation.z += -0.001*Math.PI;*/
+
+				//cube.rotation.x += 0.005*Math.PI;
+
+				requestAnimationFrame(renderScene);
+				renderer.render(scene, camera);
+			}
+			
+			$("#WebGL-output").append(renderer.domElement);
+			renderScene();
+			
+		});
+	</script>
+</html>
